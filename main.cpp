@@ -7,9 +7,14 @@
 //============================================================================
 
 #include <iostream>
+#include <MPI.h>
+
 using namespace std;
 
 int main() {
-	cout << "!!!Hello World!!!" << endl; // prints !!!Hello World!!!
+//	Parallel::MPI my(10.0,100,100,100);
+	Parallel::MPI my;
+//	my.PrintInfo();
+	my.CartInit();
 	return 0;
 }

@@ -56,8 +56,8 @@ include_directories("Parallel")
 
 add_subdirectory(Parallel)
 
-add_executable(tstMPI.x main.cpp)
+add_executable(testMPI.x main.cpp)
 
-target_link_libraries(ffield.x InputIO forceField Sys MyTools parallel ${Boost_LIBRARIES})
+target_link_libraries(testMPI.x parallel ${Boost_LIBRARIES})
 message( STATUS "LIBRARIES ........... = ${Boost_LIBRARIES}")
 message( STATUS "DIRS      ........... = ${Boost_INCLUDE_DIRS}")
