@@ -12,6 +12,7 @@
 #include <boost/mpi/environment.hpp>
 #include  <boost/mpi/group.hpp>
 #include <boost/mpi/cartesian_communicator.hpp>
+#include <boost/serialization/vector.hpp>
 #include <vector>
 #include <iostream>
 #include <MyUtilClass.h>

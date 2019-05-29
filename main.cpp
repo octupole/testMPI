@@ -27,7 +27,7 @@ int main() {
 		else outbuf[o]=-Cart.rank();
 	}
 
-	my.CartSend(outbuf);
+//	my.CartSend(outbuf);
 
 //	my.PrintInfo();
 	return 0;
