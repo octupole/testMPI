@@ -104,8 +104,8 @@ MPI::MPI(double cut, double a, double b, double c){
 	myWorld=(world);
 }
 MPI::MPI(){
-//	if(world0.rank() != 0)
-//		std::cout.setstate(std::ios::failbit);
+	if(world0.rank() != 0)
+		std::cout.setstate(std::ios::failbit);
 
 	nc=this->findSize3D(world0.size());
 	world=this->ResizeWorld(world0);
