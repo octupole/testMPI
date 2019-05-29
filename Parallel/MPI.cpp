@@ -8,6 +8,9 @@
 #include "MPI.h"
 #include <mpi.h>
 #include <cmath>
+#include <boost/range/irange.hpp>
+
+
 namespace Parallel {
 
 vector<int> MPI::findSize3D(int n){
@@ -54,14 +57,15 @@ void MPI::setDims(const int n, double cut, double a, double b, double c){
 }
 mpi::communicator MPI::ResizeWorld(mpi::communicator worldx0){
 	if(world0.size() != nc[XX]*nc[YY]*nc[ZZ]){
-		int color{0};
-		if(world0.rank() > nc[XX]*nc[YY]*nc[ZZ]-1){
-			color=1;
-		}
-		return world0.split(color);
+		mpi::group local = worldx0.group();
+		boost::integer_range<int> r = boost::irange(nc[XX]*nc[YY]*nc[ZZ]-1, worldx0.size()-1);
+		mpi::group subgroup = local.exclude(r.begin(), r.end());
+		mpi::communicator others{worldx0, subgroup};
+		return others;
 	} else{
 		return world0;
 	}
+
 }
 
 void MPI::PrintInfo(){
@@ -76,33 +80,19 @@ void MPI::PrintInfo(){
 	}
 }
 void MPI::CartInit(){
-//	Dims[XX]={nc[XX], true};
-//	Dims[YY]={nc[YY], true};
-//	Dims[ZZ]={nc[ZZ], true};
-//	cout << nc[XX] <<endl;
-//	cout << nc[YY] <<endl;
-//	cout << nc[ZZ] <<endl;exit(1);
-//	Cartx=new mpi::cartesian_communicator(world, mpi::cartesian_topology(Dims));
-//
-//	for (int r = 0; r < Cartx->size(); ++r) {
-//		Cartx->barrier();
-//		if (r == Cartx->rank()) {
-//			std::vector<int> c = Cartx->coordinates(r);
-//			std::cout << "rk :" << r << " coords: "
-//					<< c[0] << ' ' << c[1] << ' ' << c[2] << '\n';
-//		}
-//	}
-	mpi::cartesian_dimension dims[] = {{nc[XX], true}, {nc[YY],true}, {nc[ZZ],true}};
-	mpi::cartesian_communicator cart(world0, mpi::cartesian_topology(dims));
-	cout << world0.size()<< " -- " << cart.size() <<endl;exit(1);
-	  for (int r = 0; r < cart.size(); ++r) {
-	    cart.barrier();
-	    if (r == cart.rank()) {
-	      std::vector<int> c = cart.coordinates(r);
-	      std::cout << "rk :" << r << " coords: "
-	                << c[0] << ' ' << c[1] << ' ' << c[2] << '\n';
-	    }
-	  }
+	Dims[XX]={nc[XX], true};
+	Dims[YY]={nc[YY], true};
+	Dims[ZZ]={nc[ZZ], true};
+	Cartx=new mpi::cartesian_communicator(world, mpi::cartesian_topology(Dims));
+
+	for (int r = 0; r < Cartx->size(); ++r) {
+		Cartx->barrier();
+		if (r == Cartx->rank()) {
+			std::vector<int> c = Cartx->coordinates(r);
+			std::cout << "rk :" << r << " coords: "
+					<< c[0] << ' ' << c[1] << ' ' << c[2] << '\n';
+		}
+	}
 }
 MPI::MPI(double cut, double a, double b, double c){
 
@@ -119,7 +109,15 @@ MPI::MPI(){
 
 	nc=this->findSize3D(world0.size());
 	world=this->ResizeWorld(world0);
-	myWorld=(world);
+	if((world) == MPI_COMM_NULL){
+		   MPI_Finalize();
+		   exit(0);
+	}else{
+		myWorld=(world);
+	}
+	int nrank;
+	MPI_Comm_rank (myWorld, &nrank);
+	cout << world.size() <<" " << nrank <<endl;
 }
 
 MPI::~MPI() {

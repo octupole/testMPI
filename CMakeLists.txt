@@ -54,7 +54,7 @@ find_package(Boost 1.35 REQUIRED COMPONENTS
 include_directories(${Boost_INCLUDE_DIRS})
 include_directories("Parallel")
 
-add_subdirectory(parallel)
+add_subdirectory(Parallel)
 
 add_executable(testMPI.x main.cpp)
 

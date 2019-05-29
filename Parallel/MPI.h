@@ -10,6 +10,7 @@
 #include <boost/mpi/communicator.hpp>
 #include <boost/mpi/collectives.hpp>
 #include <boost/mpi/environment.hpp>
+#include  <boost/mpi/group.hpp>
 #include <boost/mpi/cartesian_communicator.hpp>
 #include <vector>
 #include <iostream>
@@ -25,7 +26,7 @@ class MPI {
 	mpi::communicator world0;
 	mpi::communicator world;
 	mpi::cartesian_communicator * Cartx;
-	mpi::cartesian_dimension * Dims[3];
+	mpi::cartesian_dimension Dims[3];
 	mpi::environment env;
 	MPI_Comm myWorld;
 	vector<int> nc{0,0,0};
