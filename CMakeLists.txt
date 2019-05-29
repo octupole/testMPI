@@ -53,11 +53,13 @@ find_package(Boost 1.35 REQUIRED COMPONENTS
 
 include_directories(${Boost_INCLUDE_DIRS})
 include_directories("Parallel")
+include_directories("Tools")
 
 add_subdirectory(Parallel)
+add_subdirectory(Tools)
 
 add_executable(testMPI.x main.cpp)
 
-target_link_libraries(testMPI.x parallel ${Boost_LIBRARIES})
+target_link_libraries(testMPI.x parallel tools ${Boost_LIBRARIES})
 message( STATUS "LIBRARIES ........... = ${Boost_LIBRARIES}")
 message( STATUS "DIRS      ........... = ${Boost_INCLUDE_DIRS}")
