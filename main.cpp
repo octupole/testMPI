@@ -7,7 +7,7 @@
 //============================================================================
 
 #include <iostream>
-#include <MPI.h>
+#include "../Parallel/MPI.h"
 
 using namespace std;
 
